@@ -1,0 +1,8 @@
+---
+# handlers file for ansible-kea-dhcp
+- name: "restart kea-dhcp"
+  service:
+    name: "{{ item.name }}"
+    state: "restarted"
+  with_items: '{{ kea_dhcp_services }}'
+  when: item.enabled

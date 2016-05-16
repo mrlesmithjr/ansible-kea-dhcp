@@ -1,0 +1,8 @@
+---
+# tasks file for ansible-kea-dhcp
+- include: redhat.yml
+  when: ansible_os_family == "RedHat"
+
+- include: services.yml
+
+- include: config.yml

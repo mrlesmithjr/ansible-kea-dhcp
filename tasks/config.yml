@@ -1,0 +1,10 @@
+---
+- name: config | configuring kea dhcp service
+  template:
+    src: "etc/kea/kea.conf.j2"
+    dest: "/etc/kea/kea.conf"
+    owner: "root"
+    group: "root"
+    mode: "o=rw,g=r,o=r"
+  notify:
+    - restart kea-dhcp
