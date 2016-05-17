@@ -1,5 +1,16 @@
 ---
 # defaults file for ansible-kea-dhcp
+kea_dhcp_debian_packages:
+  - 'kea-dhcp-ddns-server'
+  - 'kea-dhcp4-server'
+#  - 'kea-dhcp6-server'
+kea_dhcp_debian_services:
+  - name: 'kea-dhcp-ddns-server'
+    enabled: true
+  - name: 'kea-dhcp4-server'
+    enabled: true
+  - name: 'kea-dhcp6-server'
+    enabled: false
 kea_dhcp_configs:
   - name: 'Dhcp4'
     backend: 'memfile'
@@ -51,8 +62,7 @@ kea_dhcp_configs:
             subnet: '192.0.4.0/24'
     valid_lifetime: 4000
 kea_dhcp_ddns_configs:
-
-kea_dhcp_services:  #Defines services to enable
+kea_dhcp_redhat_services:  #Defines services to enable
   - name: 'kea-dhcp-ddns'
     enabled: true
   - name: 'kea-dhcp4'
