@@ -1,0 +1,7 @@
+---
+- hosts: dhcp_servers
+  vars:
+    pri_domain_name: 'test.vagrant.local'
+  roles:
+    - role: ansible-kea-dhcp
+  tasks:
