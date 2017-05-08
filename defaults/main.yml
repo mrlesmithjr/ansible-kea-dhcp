@@ -95,9 +95,9 @@ kea_dhcp_dhcp4_config:
     #     data: 'tftp.{{ kea_dhcp_pri_domain_name }}'
     #   - name: 'boot-file-name'
     #     data: 'pxelinux.0'
-    dhcp-ddns:
-      enable-updates: false
-      qualifying-suffix: '{{ kea_dhcp_pri_domain_name }}'
+    dhcp-ddns: []
+    #   enable-updates: false
+    #   qualifying-suffix: '{{ kea_dhcp_pri_domain_name }}'
     # next-server: '0.0.0.0'
     # control-socket:
     #   socket-type: 'unix'
