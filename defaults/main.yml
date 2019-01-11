@@ -95,7 +95,7 @@ kea_dhcp_dhcp4_config:
     #     data: "tftp.{{ kea_dhcp_pri_domain_name }}"
     #   - name: boot-file-name
     #     data: pxelinux.0
-    dhcp-ddns: []
+    # dhcp-ddns: []
     #   enable-updates: false
     #   qualifying-suffix: "{{ kea_dhcp_pri_domain_name }}"
     # next-server: 0.0.0.0
