@@ -1,9 +1,8 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-**Table of Contents** _generated with [DocToc](https://github.com/thlorenz/doctoc)_
-
 - [ansible-kea-dhcp](#ansible-kea-dhcp)
+  - [Build Status](#build-status)
   - [Requirements](#requirements)
   - [Role Variables](#role-variables)
   - [Dependencies](#dependencies)
@@ -16,6 +15,10 @@
 # ansible-kea-dhcp
 
 An [Ansible](https://www.ansible.com) role to install/configure [Kea DHCP](http://kea.isc.org/)
+
+## Build Status
+
+[![Build Status](https://travis-ci.org/mrlesmithjr/ansible-kea-dhcp.svg?branch=master)](https://travis-ci.org/mrlesmithjr/ansible-kea-dhcp)
 
 ## Requirements
 
