@@ -9,9 +9,8 @@
 
 - name: debian | installing kea packages
   apt:
-    name: "{{ item }}"
+    name: "{{ kea_dhcp_debian_packages }}"
     state: present
   become: true
   register: result
   until: result is successful
-  with_items: "{{ kea_dhcp_debian_packages }}"
