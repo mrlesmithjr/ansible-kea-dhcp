@@ -13,8 +13,8 @@
 
 - name: config | configuring kea dhcp services (Debian)
   template:
-    src: "{{ item }}.j2"
-    dest: "/{{ item }}"
+    src: "{{ item + '.j2' }}"
+    dest: "{{ '/' + item }}"
     owner: root
     group: root
     mode: o=rw,g=r,o=r
