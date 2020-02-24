@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: Include ansible-kea-dhcp
+      include_role:
+        name: ansible-kea-dhcp
