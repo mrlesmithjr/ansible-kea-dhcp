@@ -10,8 +10,8 @@
         interfaces-config:
           interfaces:
             - "*"
-            # - 'eth0'
-            # - 'eth1'
+            # - eth0
+            # - eth1
           dhcp-socket-type: raw
         # Use Memfile lease database backend to store leases in a CSV file.
         lease-database:
@@ -33,21 +33,21 @@
           - subnet: 192.0.2.0/24
             next-server: 192.0.2.234
             pools:
-              - pool: "192.0.2.1 - 192.0.2.200"
+              - pool: 192.0.2.1 - 192.0.2.200
             reservations:
               - hw-address: "1a:1b:1c:1d:1e:1f"
                 ip-address: 192.0.2.202
           - subnet: 192.0.3.0/24
             pools:
-              - pool: "192.0.3.1 - 192.0.3.200"
+              - pool: 192.0.3.1 - 192.0.3.200
             relay:
               ip-address: 10.0.0.1
           - subnet: 192.0.4.0/24
             pools:
-              - pool: "192.0.4.1 - 192.0.4.200"
+              - pool: 192.0.4.1 - 192.0.4.200
         option-data:
           - name: domain-name-servers
-            data: "8.8.8.8, 8.8.4.4"
+            data: 8.8.8.8, 8.8.4.4
           - name: domain-name
             data: "{{ kea_dhcp_pri_domain_name }}"
           - name: tftp-server-name
@@ -57,7 +57,7 @@
         dhcp-ddns:
           enable-updates: false
           qualifying-suffix: "{{ kea_dhcp_pri_domain_name }}"
-        # next-server: '0.0.0.0'
+        # next-server: 0.0.0.0
         control-socket:
           socket-type: unix
           socket-name: /var/run/kea.socket
@@ -72,6 +72,7 @@
             severity: INFO
             debuglevel: 0
     pri_domain_name: test.vagrant.local
-  roles:
-    - role: ansible-kea-dhcp
   tasks:
+    - name: Include ansible-kea-dhcp
+      include_role:
+        name: ansible-kea-dhcp
