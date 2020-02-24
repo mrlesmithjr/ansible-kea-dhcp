@@ -6,8 +6,8 @@
   become: true
   register: result
   until: result is successful
-  when: >
-    ansible_distribution != "Fedora"
+  when:
+    - ansible_distribution != "Fedora"
 
 - name: redhat | installing kea dhcp
   yum:

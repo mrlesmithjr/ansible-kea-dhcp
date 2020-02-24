@@ -21,7 +21,7 @@
   notify:
     - "restart {{ ansible_os_family|lower }} kea-dhcp"
   become: true
-  with_items:
+  loop:
     - etc/kea/kea-dhcp-ddns.conf
     - etc/kea/kea-dhcp4.conf
   when: ansible_os_family == "Debian"
