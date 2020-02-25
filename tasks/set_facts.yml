@@ -1,0 +1,137 @@
+---
+- name: set_facts | Setting Debian Pre-Reqs
+  set_fact:
+    kea_dhcp_pre_reqs:
+      - apt-transport-https
+      - debian-archive-keyring
+      - debian-keyring
+  when:
+    - ansible_distribution == "Debian"
+
+- name: set_facts | Setting Debian Pre-Reqs
+  set_fact:
+    kea_dhcp_pre_reqs:
+      - apt-transport-https
+  when:
+    - ansible_distribution == "Ubuntu"
+
+- name: set_facts | Setting RedHat Pre-Reqs
+  set_fact:
+    kea_dhcp_pre_reqs:
+      - yum-utils
+  when:
+    - ansible_os_family == "RedHat"
+
+- name: set_facts | Setting Repo Info (Debian)
+  set_fact:
+    kea_dhcp_repo: "{{ 'deb '+kea_dhcp_repos+'/kea-1-6/deb/'+ansible_distribution|lower+' '+ansible_distribution_release|lower+' main' }}"
+    kea_dhcp_repo_key: "{{ kea_dhcp_repos+'/kea-1-6/cfg/gpg/gpg.0607E2621F1564A6.key' }}"
+  when:
+    - ansible_os_family == "Debian"
+    - kea_dhcp_version is version('1.6', '>=')
+    - kea_dhcp_version is version('1.7', '<')
+
+- name: set_facts | Setting Repo Info (Debian)
+  set_fact:
+    kea_dhcp_repo: "{{ 'deb '+kea_dhcp_repos+'/kea-1-7/deb/'+ansible_distribution|lower+' '+ansible_distribution_release|lower+' main' }}"
+    kea_dhcp_repo_key: "{{ kea_dhcp_repos+'/kea-1-7/cfg/gpg/gpg.40544590508A17DE.key' }}"
+  when:
+    - ansible_os_family == "Debian"
+    - kea_dhcp_version is version('1.7', '>=')
+    - kea_dhcp_version is version('1.8', '<')
+
+- name: set_facts | Setting Repo Info (RedHat)
+  set_fact:
+    kea_dhcp_repo_key: "{{ kea_dhcp_repos+'/kea-1-7/cfg/gpg/gpg.40544590508A17DE.key' }}"
+  when:
+    - ansible_os_family == "RedHat"
+    - kea_dhcp_version is version('1.7', '>=')
+    - kea_dhcp_version is version('1.8', '<')
+
+- name: set_facts | Setting Kea Packages (Debian)
+  set_fact:
+    kea_dhcp_packages:
+      - isc-kea-admin
+      - isc-kea-dhcp-ddns-server
+      - isc-kea-dhcp4-server
+      - isc-kea-dhcp6-server
+  when:
+    - ansible_distribution == "Debian"
+
+- name: set_facts | Setting Kea Packages (Ubuntu)
+  set_fact:
+    kea_dhcp_packages:
+      - kea-admin
+      - kea-dhcp-ddns-server
+      - kea-dhcp4-server
+      - kea-dhcp6-server
+  when:
+    - ansible_distribution == "Ubuntu"
+    - ansible_distribution_version is version('18.04', '<')
+
+- name: set_facts | Setting Kea Packages (Ubuntu)
+  set_fact:
+    kea_dhcp_packages:
+      - isc-kea-admin
+      - isc-kea-dhcp-ddns-server
+      - isc-kea-dhcp4-server
+      - isc-kea-dhcp6-server
+  when:
+    - ansible_distribution == "Ubuntu"
+    - ansible_distribution_version is version('18.04', '>=')
+
+- name: set_facts | Setting Kea Packages (RedHat)
+  set_fact:
+    kea_dhcp_packages:
+      - isc-kea
+  when:
+    - ansible_os_family == "RedHat"
+
+- name: set_facts | Setting Services Facts (Debian)
+  set_fact:
+    kea_dhcp_services:
+      - name: isc-kea-dhcp-ddns-server
+        enabled: "{{ kea_dhcp_service_state['ddns']|bool }}"
+      - name: isc-kea-dhcp4-server
+        enabled: "{{ kea_dhcp_service_state['ipv4']|bool }}"
+      - name: isc-kea-dhcp6-server
+        enabled: "{{ kea_dhcp_service_state['ipv6']|bool }}"
+  when:
+    - ansible_distribution == "Debian"
+
+- name: set_facts | Setting Services Facts (Ubuntu)
+  set_fact:
+    kea_dhcp_services:
+      - name: kea-dhcp-ddns-server
+        enabled: "{{ kea_dhcp_service_state['ddns']|bool }}"
+      - name: kea-dhcp4-server
+        enabled: "{{ kea_dhcp_service_state['ipv4']|bool }}"
+      - name: kea-dhcp6-server
+        enabled: "{{ kea_dhcp_service_state['ipv6']|bool }}"
+  when:
+    - ansible_distribution == "Ubuntu"
+    - ansible_distribution_version is version('18.04', '<')
+
+- name: set_facts | Setting Services Facts (Ubuntu)
+  set_fact:
+    kea_dhcp_services:
+      - name: isc-kea-dhcp-ddns-server
+        enabled: "{{ kea_dhcp_service_state['ddns']|bool }}"
+      - name: isc-kea-dhcp4-server
+        enabled: "{{ kea_dhcp_service_state['ipv4']|bool }}"
+      - name: isc-kea-dhcp6-server
+        enabled: "{{ kea_dhcp_service_state['ipv6']|bool }}"
+  when:
+    - ansible_distribution == "Ubuntu"
+    - ansible_distribution_version is version('18.04', '>=')
+
+- name: set_facts | Setting Services Facts (RedHat)
+  set_fact:
+    kea_dhcp_services:
+      - name: kea-dhcp-ddns
+        enabled: "{{ kea_dhcp_service_state['ddns']|bool }}"
+      - name: kea-dhcp4
+        enabled: "{{ kea_dhcp_service_state['ipv4']|bool }}"
+      - name: kea-dhcp6
+        enabled: "{{ kea_dhcp_service_state['ipv6']|bool }}"
+  when: ansible_os_family == "RedHat"

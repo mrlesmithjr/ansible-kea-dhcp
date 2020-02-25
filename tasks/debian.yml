@@ -1,15 +1,27 @@
 ---
-- name: debian | updating apt-cache
+- name: debian | Installing Pre-Reqs
   apt:
-    update_cache: yes
-    cache_valid_time: 86400
+    name: "{{ kea_dhcp_pre_reqs }}"
+    state: present
   become: true
   register: result
   until: result is successful
 
-- name: debian | installing kea packages
+- name: debian | Adding Kea DHCP Repo Key
+  apt_key:
+    url: "{{ kea_dhcp_repo_key }}"
+    state: present
+  become: true
+
+- name: debian | Adding Kea DHCP Repo
+  apt_repository:
+    repo: "{{ kea_dhcp_repo }}"
+    state: present
+  become: true
+
+- name: debian | Installing Kea DHCP Packages
   apt:
-    name: "{{ kea_dhcp_debian_packages }}"
+    name: "{{ kea_dhcp_packages }}"
     state: present
   become: true
   register: result

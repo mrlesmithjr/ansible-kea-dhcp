@@ -4,21 +4,11 @@
 # Defines if Kea DHCP should be configured
 kea_dhcp_config: false
 
-# Defines  Kea DHCP packages to install for Debian/Ubuntu
-kea_dhcp_debian_packages:
-  - kea-dhcp-ddns-server
-  - kea-dhcp4-server
-  # - kea-dhcp6-server
-  - socat
-
-# Defines Kea DHCP Debian/Ubuntu services should be enabled
-kea_dhcp_debian_services:
-  - name: kea-dhcp-ddns-server
-    enabled: true
-  - name: kea-dhcp4-server
-    enabled: true
-  - name: kea-dhcp6-server
-    enabled: false
+# Defines Kea DHCP services should be enabled
+kea_dhcp_service_state:
+  ddns: true
+  ipv4: true
+  ipv6: false
 
 # The DHCP DDNS configuration below is formatted appropriately to be converted
 # directly to JSON using the kea-dhcp-ddns.conf.j2 Jinja2 template.
@@ -114,13 +104,17 @@ kea_dhcp_dhcp4_config:
         debuglevel: 0
 
 # Defines Kea DHCP RedHat services should be enabled
-kea_dhcp_redhat_services:
-  - name: kea-dhcp-ddns
-    enabled: true
-  - name: kea-dhcp4
-    enabled: true
-  - name: kea-dhcp6
-    enabled: false
+# kea_dhcp_redhat_services:
+#   - name: kea-dhcp-ddns
+#     enabled: true
+#   - name: kea-dhcp4
+#     enabled: true
+#   - name: kea-dhcp6
+#     enabled: false
 
 # Defines primary domain name of environment
 kea_dhcp_pri_domain_name: vagrant.local
+
+kea_dhcp_repos: https://dl.cloudsmith.io/public/isc
+
+kea_dhcp_version: 1.7

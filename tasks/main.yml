@@ -1,11 +1,14 @@
 ---
 # tasks file for ansible-kea-dhcp
-- include: debian.yml
+- include_tasks: set_facts.yml
+
+- include_tasks: debian.yml
   when: ansible_os_family == "Debian"
 
-- include: redhat.yml
+- include_tasks: redhat.yml
   when: ansible_os_family == "RedHat"
 
-- include: services.yml
+- include_tasks: services.yml
 
-- include: config.yml
+- include_tasks: config.yml
+  when: kea_dhcp_config|bool
