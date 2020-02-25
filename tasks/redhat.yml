@@ -1,19 +1,70 @@
 ---
-- name: redhat | enabling EPEL repo
-  yum:
+- name: redhat | Adding EPEL Repo
+  package:
     name: epel-release
     state: present
   become: true
   register: result
   until: result is successful
-  when:
-    - ansible_distribution != "Fedora"
+  when: ansible_distribution != "Fedora"
 
-- name: redhat | installing kea dhcp
-  yum:
-    name: kea
+- name: redhat | Installing Pre-Reqs
+  package:
+    name: "{{ kea_dhcp_pre_reqs }}"
     state: present
   become: true
   register: result
   until: result is successful
-  when: ansible_distribution != "Fedora"
+
+- name: redhat | Adding Kea DHCP Repo Key
+  rpm_key:
+    key: "{{ kea_dhcp_repo_key }}"
+    state: present
+  become: true
+
+- name: redhat | Kea DHCP 1.7
+  block:
+    - name: redhat | Adding Kea DHCP Repo
+      yum_repository:
+        name: isc-kea-1-7
+        description: isc-kea-1-7
+        baseurl: "{{ kea_dhcp_repos+'/kea-1-7/rpm/el/7/$basearch' }}"
+        gpgcheck: true
+        enabled: true
+        gpgkey: "{{ kea_dhcp_repo_key }}"
+        state: present
+      become: true
+
+    - name: redhat | Adding Kea DHCP Repo (noarch)
+      yum_repository:
+        name: isc-kea-1-7-noarch
+        description: isc-kea-1-7-noarch
+        baseurl: "{{ kea_dhcp_repos+'/kea-1-7/rpm/el/7/noarch' }}"
+        gpgcheck: true
+        enabled: true
+        gpgkey: "{{ kea_dhcp_repo_key }}"
+        state: present
+      become: true
+
+    - name: redhat | Adding Kea DHCP Repo (source)
+      yum_repository:
+        name: isc-kea-1-7-source
+        description: isc-kea-1-7-source
+        baseurl: "{{ kea_dhcp_repos+'/kea-1-7/rpm/el/7/SRPMS' }}"
+        gpgcheck: true
+        enabled: true
+        gpgkey: "{{ kea_dhcp_repo_key }}"
+        state: present
+      become: true
+
+  when:
+    - kea_dhcp_version is version('1.7', '>=')
+    - kea_dhcp_version is version('1.8', '<')
+
+- name: redhat | Installing Kea DHCP Packages
+  package:
+    name: "{{ kea_dhcp_packages }}"
+    state: present
+  become: true
+  register: result
+  until: result is successful
