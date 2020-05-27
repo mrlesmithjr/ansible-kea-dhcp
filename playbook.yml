@@ -1,5 +1,6 @@
 ---
 - hosts: dhcp_servers
+  gather_facts: true
   vars:
     kea_dhcp_config: true
     kea_dhcp_dhcp4_config:

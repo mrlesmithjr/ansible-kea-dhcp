@@ -28,7 +28,7 @@
       yum_repository:
         name: isc-kea-1-7
         description: isc-kea-1-7
-        baseurl: "{{ kea_dhcp_repos+'/kea-1-7/rpm/el/7/$basearch' }}"
+        baseurl: "{{ kea_dhcp_repos }}/kea-1-7/rpm/el/{{ hostvars[inventory_hostname].ansible_distribution_major_version }}/$basearch"
         gpgcheck: true
         enabled: true
         gpgkey: "{{ kea_dhcp_repo_key }}"
@@ -39,7 +39,7 @@
       yum_repository:
         name: isc-kea-1-7-noarch
         description: isc-kea-1-7-noarch
-        baseurl: "{{ kea_dhcp_repos+'/kea-1-7/rpm/el/7/noarch' }}"
+        baseurl: "{{ kea_dhcp_repos }}/kea-1-7/rpm/el/{{ hostvars[inventory_hostname].ansible_distribution_major_version }}/noarch"
         gpgcheck: true
         enabled: true
         gpgkey: "{{ kea_dhcp_repo_key }}"
@@ -50,7 +50,7 @@
       yum_repository:
         name: isc-kea-1-7-source
         description: isc-kea-1-7-source
-        baseurl: "{{ kea_dhcp_repos+'/kea-1-7/rpm/el/7/SRPMS' }}"
+        baseurl: "{{ kea_dhcp_repos }}/kea-1-7/rpm/el/{{ hostvars[inventory_hostname].ansible_distribution_major_version }}/SRPMS"
         gpgcheck: true
         enabled: true
         gpgkey: "{{ kea_dhcp_repo_key }}"
