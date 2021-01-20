@@ -55,6 +55,7 @@
       - isc-kea-dhcp-ddns-server
       - isc-kea-dhcp4-server
       - isc-kea-dhcp6-server
+      - isc-kea-ctrl-agent
   when:
     - ansible_distribution == "Debian"
 
@@ -65,6 +66,7 @@
       - kea-dhcp-ddns-server
       - kea-dhcp4-server
       - kea-dhcp6-server
+      - kea-ctrl-agent
   when:
     - ansible_distribution == "Ubuntu"
     - ansible_distribution_version is version('18.04', '<')
@@ -76,6 +78,7 @@
       - isc-kea-dhcp-ddns-server
       - isc-kea-dhcp4-server
       - isc-kea-dhcp6-server
+      - isc-kea-ctrl-agent
   when:
     - ansible_distribution == "Ubuntu"
     - ansible_distribution_version is version('18.04', '>=')
@@ -96,6 +99,8 @@
         enabled: "{{ kea_dhcp_service_state['ipv4']|bool }}"
       - name: isc-kea-dhcp6-server
         enabled: "{{ kea_dhcp_service_state['ipv6']|bool }}"
+      - name: isc-kea-ctrl-agent
+        enabled: "{{ kea_dhcp_service_state['ctrl']|bool }}"
   when:
     - ansible_distribution == "Debian"
 
@@ -108,6 +113,8 @@
         enabled: "{{ kea_dhcp_service_state['ipv4']|bool }}"
       - name: kea-dhcp6-server
         enabled: "{{ kea_dhcp_service_state['ipv6']|bool }}"
+      - name: kea-ctrl-agent
+        enabled: "{{ kea_dhcp_service_state['ctrl']|bool }}"
   when:
     - ansible_distribution == "Ubuntu"
     - ansible_distribution_version is version('18.04', '<')
@@ -121,6 +128,8 @@
         enabled: "{{ kea_dhcp_service_state['ipv4']|bool }}"
       - name: isc-kea-dhcp6-server
         enabled: "{{ kea_dhcp_service_state['ipv6']|bool }}"
+      - name: isc-kea-ctrl-agent
+        enabled: "{{ kea_dhcp_service_state['ctrl']|bool }}"
   when:
     - ansible_distribution == "Ubuntu"
     - ansible_distribution_version is version('18.04', '>=')
@@ -134,4 +143,6 @@
         enabled: "{{ kea_dhcp_service_state['ipv4']|bool }}"
       - name: kea-dhcp6
         enabled: "{{ kea_dhcp_service_state['ipv6']|bool }}"
+      - name: kea-ctrl-agent
+        enabled: "{{ kea_dhcp_service_state['ctrl']|bool }}"
   when: ansible_os_family == "RedHat"

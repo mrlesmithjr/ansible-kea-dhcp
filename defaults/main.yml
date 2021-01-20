@@ -9,6 +9,7 @@ kea_dhcp_service_state:
   ddns: true
   ipv4: true
   ipv6: false
+  ctrl: true
 
 # The DHCP DDNS configuration below is formatted appropriately to be converted
 # directly to JSON using the kea-dhcp-ddns.conf.j2 Jinja2 template.
@@ -102,6 +103,29 @@ kea_dhcp_dhcp4_config:
           - output: /var/log/kea-dhcp4.log
         severity: INFO
         debuglevel: 0
+
+kea_dhcp_ctrl_config:
+  Control-agent:
+    http-host: 127.0.0.1
+    http-port: 8000
+    control-sockets:
+      dhcp4:
+        socket-type: unix
+        socket-name: "/tmp/kea4-ctrl-socket"
+      dhcp6:
+        socket-type: unix
+        socket-name: "/tmp/kea6-ctrl-socket"
+      d2:
+        socket-type: unix
+        socket-name: "/tmp/kea-ddns-ctrl-socket"
+    hooks-libraries: []
+    loggers:
+    - name: kea-ctrl-agent
+      output_options:
+      - output: stdout
+        pattern: "%-5p %m\n"
+      severity: INFO
+      debuglevel: 0
 
 # Defines Kea DHCP RedHat services should be enabled
 # kea_dhcp_redhat_services:
