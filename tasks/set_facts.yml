@@ -40,6 +40,15 @@
     - kea_dhcp_version is version('1.7', '>=')
     - kea_dhcp_version is version('1.8', '<')
 
+- name: set_facts | Setting Repo Info (Debian)
+  set_fact:
+    kea_dhcp_repo: "{{ 'deb '+kea_dhcp_repos+'/kea-1-8/deb/'+ansible_distribution|lower+' '+ansible_distribution_release|lower+' main' }}"
+    kea_dhcp_repo_key: "{{ kea_dhcp_repos+'/kea-1-8/cfg/gpg/gpg.4DD5AE28ADA7268E.key' }}"
+  when:
+    - ansible_os_family == "Debian"
+    - kea_dhcp_version is version('1.8', '>=')
+    - kea_dhcp_version is version('1.9', '<')
+
 - name: set_facts | Setting Repo Info (RedHat)
   set_fact:
     kea_dhcp_repo_key: "{{ kea_dhcp_repos+'/kea-1-7/cfg/gpg/gpg.40544590508A17DE.key' }}"
