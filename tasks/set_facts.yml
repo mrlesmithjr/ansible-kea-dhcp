@@ -56,6 +56,7 @@
       - isc-kea-dhcp4-server
       - isc-kea-dhcp6-server
       - isc-kea-ctrl-agent
+      - python3-isc-kea-connector
   when:
     - ansible_distribution == "Debian"
 
@@ -79,6 +80,7 @@
       - isc-kea-dhcp4-server
       - isc-kea-dhcp6-server
       - isc-kea-ctrl-agent
+      - python3-isc-kea-connector
   when:
     - ansible_distribution == "Ubuntu"
     - ansible_distribution_version is version('18.04', '>=')
