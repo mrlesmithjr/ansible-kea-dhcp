@@ -9,6 +9,7 @@ kea_dhcp_service_state:
   ddns: true
   ipv4: true
   ipv6: false
+  ctrl-agent: true
 
 # The DHCP DDNS configuration below is formatted appropriately to be converted
 # directly to JSON using the kea-dhcp-ddns.conf.j2 Jinja2 template.

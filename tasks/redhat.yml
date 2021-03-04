@@ -22,13 +22,13 @@
     state: present
   become: true
 
-- name: redhat | Kea DHCP 1.7
+- name: "redhat | Kea DHCP {{ kea_dhcp_version }}"
   block:
     - name: redhat | Adding Kea DHCP Repo
       yum_repository:
-        name: isc-kea-1-7
-        description: isc-kea-1-7
-        baseurl: "{{ kea_dhcp_repos }}/kea-1-7/rpm/el/{{ hostvars[inventory_hostname].ansible_distribution_major_version }}/$basearch"
+        name: "isc-kea-{{ kea_dhcp_version|replace('.','-') }}"
+        description: "{{ isc-kea-{{ kea_dhcp_version|replace('.','-') }}"
+        baseurl: "{{ kea_dhcp_repos }}/kea-{{ kea_dhcp_version|replace('.','-') }}/rpm/el/{{ hostvars[inventory_hostname].ansible_distribution_major_version }}/$basearch"
         gpgcheck: true
         enabled: true
         gpgkey: "{{ kea_dhcp_repo_key }}"
@@ -37,9 +37,9 @@
 
     - name: redhat | Adding Kea DHCP Repo (noarch)
       yum_repository:
-        name: isc-kea-1-7-noarch
-        description: isc-kea-1-7-noarch
-        baseurl: "{{ kea_dhcp_repos }}/kea-1-7/rpm/el/{{ hostvars[inventory_hostname].ansible_distribution_major_version }}/noarch"
+        name: "isc-kea-{{ kea_dhcp_version|replace('.','-') }}-noarch"
+        description: "isc-kea-{{ kea_dhcp_version|replace('.','-') }}-noarch"
+        baseurl: "{{ kea_dhcp_repos }}/kea-{{ kea_dhcp_version|replace('.','-') }}/rpm/el/{{ hostvars[inventory_hostname].ansible_distribution_major_version }}/noarch"
         gpgcheck: true
         enabled: true
         gpgkey: "{{ kea_dhcp_repo_key }}"
@@ -48,18 +48,14 @@
 
     - name: redhat | Adding Kea DHCP Repo (source)
       yum_repository:
-        name: isc-kea-1-7-source
-        description: isc-kea-1-7-source
-        baseurl: "{{ kea_dhcp_repos }}/kea-1-7/rpm/el/{{ hostvars[inventory_hostname].ansible_distribution_major_version }}/SRPMS"
+        name: isc-kea-{{ kea_dhcp_version|replace('.','-') }}-source
+        description: isc-kea-{{ kea_dhcp_version|replace('.','-') }}-source
+        baseurl: "{{ kea_dhcp_repos }}/kea-{{ kea_dhcp_version|replace('.','-') }}/rpm/el/{{ hostvars[inventory_hostname].ansible_distribution_major_version }}/SRPMS"
         gpgcheck: true
         enabled: true
         gpgkey: "{{ kea_dhcp_repo_key }}"
         state: present
       become: true
-
-  when:
-    - kea_dhcp_version is version('1.7', '>=')
-    - kea_dhcp_version is version('1.8', '<')
 
 - name: redhat | Installing Kea DHCP Packages
   package:

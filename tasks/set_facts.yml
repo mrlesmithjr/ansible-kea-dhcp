@@ -40,6 +40,24 @@
     - kea_dhcp_version is version('1.7', '>=')
     - kea_dhcp_version is version('1.8', '<')
 
+- name: set_facts | Setting Repo Info (Debian)
+  set_fact:
+    kea_dhcp_repo: "{{ 'deb '+kea_dhcp_repos+'/kea-1-8/deb/'+ansible_distribution|lower+' '+ansible_distribution_release|lower+' main' }}"
+    kea_dhcp_repo_key: "{{ kea_dhcp_repos+'/kea-1-8/cfg/gpg/gpg.4DD5AE28ADA7268E.key' }}"
+  when:
+    - ansible_os_family == "Debian"
+    - kea_dhcp_version is version('1.8', '>=')
+    - kea_dhcp_version is version('1.9', '<')
+
+- name: set_facts | Setting Repo Info (Debian)
+  set_fact:
+    kea_dhcp_repo: "{{ 'deb '+kea_dhcp_repos+'/kea-1-9/deb/'+ansible_distribution|lower+' '+ansible_distribution_release|lower+' main' }}"
+    kea_dhcp_repo_key: "{{ kea_dhcp_repos+'/kea-1-9/cfg/gpg/gpg.5DC67B0A74E30739.key' }}"
+  when:
+    - ansible_os_family == "Debian"
+    - kea_dhcp_version is version('1.9', '>=')
+    - kea_dhcp_version is version('1.10', '<')
+
 - name: set_facts | Setting Repo Info (RedHat)
   set_fact:
     kea_dhcp_repo_key: "{{ kea_dhcp_repos+'/kea-1-7/cfg/gpg/gpg.40544590508A17DE.key' }}"
@@ -48,10 +66,27 @@
     - kea_dhcp_version is version('1.7', '>=')
     - kea_dhcp_version is version('1.8', '<')
 
+- name: set_facts | Setting Repo Info (RedHat)
+  set_fact:
+    kea_dhcp_repo_key: "{{ kea_dhcp_repos+'/kea-1-8/cfg/gpg/gpg.4DD5AE28ADA7268E.key' }}"
+  when:
+    - ansible_os_family == "RedHat"
+    - kea_dhcp_version is version('1.8', '>=')
+    - kea_dhcp_version is version('1.9', '<')
+
+- name: set_facts | Setting Repo Info (RedHat)
+  set_fact:
+    kea_dhcp_repo_key: "{{ kea_dhcp_repos+'/kea-1-9/cfg/gpg/gpg.5DC67B0A74E30739.key' }}"
+  when:
+    - ansible_os_family == "RedHat"
+    - kea_dhcp_version is version('1.9', '>=')
+    - kea_dhcp_version is version('1.10', '<')
+
 - name: set_facts | Setting Kea Packages (Debian)
   set_fact:
     kea_dhcp_packages:
       - isc-kea-admin
+      - isc-kea-ctrl-agent
       - isc-kea-dhcp-ddns-server
       - isc-kea-dhcp4-server
       - isc-kea-dhcp6-server
@@ -62,6 +97,7 @@
   set_fact:
     kea_dhcp_packages:
       - kea-admin
+      - kea-ctrl-agent
       - kea-dhcp-ddns-server
       - kea-dhcp4-server
       - kea-dhcp6-server
@@ -73,6 +109,7 @@
   set_fact:
     kea_dhcp_packages:
       - isc-kea-admin
+      - isc-kea-ctrl-agent
       - isc-kea-dhcp-ddns-server
       - isc-kea-dhcp4-server
       - isc-kea-dhcp6-server
@@ -92,6 +129,8 @@
     kea_dhcp_services:
       - name: isc-kea-dhcp-ddns-server
         enabled: "{{ kea_dhcp_service_state['ddns']|bool }}"
+      - name: isc-kea-ctrl-agent
+        enabled: "{{ kea_dhcp_service_state['ctrl-agent']|bool }}"
       - name: isc-kea-dhcp4-server
         enabled: "{{ kea_dhcp_service_state['ipv4']|bool }}"
       - name: isc-kea-dhcp6-server
@@ -104,6 +143,8 @@
     kea_dhcp_services:
       - name: kea-dhcp-ddns-server
         enabled: "{{ kea_dhcp_service_state['ddns']|bool }}"
+      - name: kea-ctrl-agent
+        enabled: "{{ kea_dhcp_service_state['ctrl-agent']|bool }}"
       - name: kea-dhcp4-server
         enabled: "{{ kea_dhcp_service_state['ipv4']|bool }}"
       - name: kea-dhcp6-server
@@ -117,6 +158,8 @@
     kea_dhcp_services:
       - name: isc-kea-dhcp-ddns-server
         enabled: "{{ kea_dhcp_service_state['ddns']|bool }}"
+      - name: isc-kea-ctrl-agent
+        enabled: "{{ kea_dhcp_service_state['ctrl-agent']|bool }}"
       - name: isc-kea-dhcp4-server
         enabled: "{{ kea_dhcp_service_state['ipv4']|bool }}"
       - name: isc-kea-dhcp6-server
@@ -130,6 +173,8 @@
     kea_dhcp_services:
       - name: kea-dhcp-ddns
         enabled: "{{ kea_dhcp_service_state['ddns']|bool }}"
+      - name: kea-ctrl-agent
+        enabled: "{{ kea_dhcp_service_state['ctrl-agent']|bool }}"
       - name: kea-dhcp4
         enabled: "{{ kea_dhcp_service_state['ipv4']|bool }}"
       - name: kea-dhcp6

@@ -12,3 +12,5 @@
   loop:
     - etc/kea/kea-dhcp-ddns.conf
     - etc/kea/kea-dhcp4.conf
+    - etc/kea/kea-dhcp6.conf
+    - etc/kea/kea-ctrl-agent.conf
