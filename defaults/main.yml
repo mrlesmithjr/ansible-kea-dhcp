@@ -104,14 +104,31 @@ kea_dhcp_dhcp4_config:
         severity: INFO
         debuglevel: 0
 
-# Defines Kea DHCP RedHat services should be enabled
-# kea_dhcp_redhat_services:
-#   - name: kea-dhcp-ddns
-#     enabled: true
-#   - name: kea-dhcp4
-#     enabled: true
-#   - name: kea-dhcp6
-#     enabled: false
+
+
+# The DHCP CTRL Agent configuration below is formatted appropriately to be 
+# converted directly to JSON using the kea-dhcp4.conf.j2 Jinja2 template.
+# If you need to add more settings/options below ensure they are added 
+# appropriately in YAML format in order to parse to JSON correctly.
+# Reference the below guide for more information
+# https://kea.readthedocs.io/en/kea-1.9.5/arm/agent.html
+ctrl_agent_config:
+  Control-agent:
+    http-host: 127.0.0.1
+    http-port: 8000
+    control-sockets:
+      dhcp4:
+        socket-type: "unix"
+        socket-name: "/var/run/kea.socket"
+    loggers:
+      - name: "kea-ctrl-agent"
+        output_options:
+          - output: "/var/log/kea/kea-ctrl-agent.log"
+            flush: true
+            maxsize: 1048576
+            maxver: 8
+        severity: "INFO"
+
 
 # Defines primary domain name of environment
 kea_dhcp_pri_domain_name: vagrant.local

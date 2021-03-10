@@ -127,10 +127,10 @@
 - name: set_facts | Setting Services Facts (Debian)
   set_fact:
     kea_dhcp_services:
-      - name: isc-kea-dhcp-ddns-server
-        enabled: "{{ kea_dhcp_service_state['ddns']|bool }}"
       - name: isc-kea-ctrl-agent
         enabled: "{{ kea_dhcp_service_state['ctrl-agent']|bool }}"
+      - name: isc-kea-dhcp-ddns-server
+        enabled: "{{ kea_dhcp_service_state['ddns']|bool }}"
       - name: isc-kea-dhcp4-server
         enabled: "{{ kea_dhcp_service_state['ipv4']|bool }}"
       - name: isc-kea-dhcp6-server
@@ -141,10 +141,10 @@
 - name: set_facts | Setting Services Facts (Ubuntu)
   set_fact:
     kea_dhcp_services:
-      - name: kea-dhcp-ddns-server
-        enabled: "{{ kea_dhcp_service_state['ddns']|bool }}"
       - name: kea-ctrl-agent
         enabled: "{{ kea_dhcp_service_state['ctrl-agent']|bool }}"
+      - name: kea-dhcp-ddns-server
+        enabled: "{{ kea_dhcp_service_state['ddns']|bool }}"
       - name: kea-dhcp4-server
         enabled: "{{ kea_dhcp_service_state['ipv4']|bool }}"
       - name: kea-dhcp6-server
@@ -156,10 +156,10 @@
 - name: set_facts | Setting Services Facts (Ubuntu)
   set_fact:
     kea_dhcp_services:
-      - name: isc-kea-dhcp-ddns-server
-        enabled: "{{ kea_dhcp_service_state['ddns']|bool }}"
       - name: isc-kea-ctrl-agent
         enabled: "{{ kea_dhcp_service_state['ctrl-agent']|bool }}"
+      - name: isc-kea-dhcp-ddns-server
+        enabled: "{{ kea_dhcp_service_state['ddns']|bool }}"
       - name: isc-kea-dhcp4-server
         enabled: "{{ kea_dhcp_service_state['ipv4']|bool }}"
       - name: isc-kea-dhcp6-server
@@ -171,10 +171,10 @@
 - name: set_facts | Setting Services Facts (RedHat)
   set_fact:
     kea_dhcp_services:
-      - name: kea-dhcp-ddns
-        enabled: "{{ kea_dhcp_service_state['ddns']|bool }}"
       - name: kea-ctrl-agent
         enabled: "{{ kea_dhcp_service_state['ctrl-agent']|bool }}"
+      - name: kea-dhcp-ddns
+        enabled: "{{ kea_dhcp_service_state['ddns']|bool }}"
       - name: kea-dhcp4
         enabled: "{{ kea_dhcp_service_state['ipv4']|bool }}"
       - name: kea-dhcp6
