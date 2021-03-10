@@ -112,7 +112,7 @@ kea_dhcp_dhcp4_config:
 # appropriately in YAML format in order to parse to JSON correctly.
 # Reference the below guide for more information
 # https://kea.readthedocs.io/en/kea-1.9.5/arm/agent.html
-kea_ctrl_agent_config:
+kea_dhcp_ctrl_agent_config:
   Control-agent:
     http-host: 127.0.0.1
     http-port: 8000
