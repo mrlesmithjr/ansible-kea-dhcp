@@ -1,0 +1,24 @@
+---
+- name: alpine | Installing Pre-Reqs
+  community.general.apk:
+    name: "{{ kea_dhcp_pre_reqs }}"
+    state: present
+  become: true
+  register: result
+  until: result is successful
+
+- name: alpine | Adding Kea DHCP Repo Key
+  get_url:
+    url: "{{ key_dhcp_repo_key }}"
+    dest: "/etc/apk/keys/kea-{{ kea_dhcp_version|replace('.','-') }}.rsa.pub"
+  become: true
+
+- name: alpine | Installing Kea DHCP Packages
+  community.general.apk:
+    name: "{{ kea_dhcp_packages }}"
+    state: present
+    update_cache: yes
+    repository: "{{ kea_dhcp_repo }}"
+  become: true
+  register: result
+  until: result is successful
