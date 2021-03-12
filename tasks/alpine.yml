@@ -3,15 +3,22 @@
   community.general.apk:
     name: "{{ kea_dhcp_pre_reqs }}"
     state: present
+    update_cache: yes
   become: true
   register: result
   until: result is successful
 
 - name: alpine | Adding Kea DHCP Repo Key
   get_url:
-    url: "{{ key_dhcp_repo_key }}"
-    dest: "/etc/apk/keys/kea-{{ kea_dhcp_version|replace('.','-') }}.rsa.pub"
+    url: "{{ kea_dhcp_repo_key }}"
+    dest: "{{ kea_dhcp_repo_key_location }}"
   become: true
+
+- name: alpine | Adding Kea Repo
+  ansible.builtin.lineinfile:
+    path: /etc/apk/repositories
+    regexp: "^{{ kea_dhcp_repos }}"
+    line: "{{ kea_dhcp_repo }}"
 
 - name: alpine | Installing Kea DHCP Packages
   community.general.apk:

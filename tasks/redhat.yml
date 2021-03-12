@@ -27,7 +27,7 @@
     - name: redhat | Adding Kea DHCP Repo
       yum_repository:
         name: "isc-kea-{{ kea_dhcp_version|replace('.','-') }}"
-        description: "{{ isc-kea-{{ kea_dhcp_version|replace('.','-') }}"
+        description: "isc-kea-{{ kea_dhcp_version|replace('.','-') }}"
         baseurl: "{{ kea_dhcp_repos }}/kea-{{ kea_dhcp_version|replace('.','-') }}/rpm/el/{{ hostvars[inventory_hostname].ansible_distribution_major_version }}/$basearch"
         gpgcheck: true
         enabled: true
