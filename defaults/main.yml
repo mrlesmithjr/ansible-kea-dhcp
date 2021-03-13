@@ -38,19 +38,19 @@ kea_dhcp_dhcp4_config:
   Dhcp4:
     renew-timer: 1000
     rebind-timer: 2000
-    # Add names of interfaces to listen on
+  # Add names of interfaces to listen on
     interfaces-config:
       interfaces:
         - "*"
         # - eth0
         # - eth1
       dhcp-socket-type: raw
-    # Use Memfile lease database backend to store leases in a CSV file.
+  # Use Memfile lease database backend to store leases in a CSV file.
     lease-database:
       type: memfile
       persist: true
       lfc-interval: 0
-    # Setup reclamation of the expired leases and leases affinity.
+  # Setup reclamation of the expired leases and leases affinity.
     expired-leases-processing:
       reclaim-timer-wait-time: 10
       flush-reclaimed-timer-wait-time: 25
@@ -58,9 +58,18 @@ kea_dhcp_dhcp4_config:
       max-reclaim-leases: 100
       max-reclaim-time: 250
       unwarned-reclaim-cycles: 5
-    # Global (inherited by all subnets) lease lifetime is mandatory parameter.
+  # Global (inherited by all subnets) lease lifetime is mandatory parameter.
     valid-lifetime: 4000
-    # Below an example of the simple subnet declarations
+  # Reservations are not in pool / faster look-up
+    # reservation-mode: out-of-pool
+  # Check only MAC address, ignore DUID or client-id
+    # host-reservation-identifiers:
+    #   - hw-address
+  # custom options for Juniper ZTP etc.
+    # option-def: "{{ dhcp4_option_defs }}"
+  # custom client classes for Juniper ZTP etc.
+    # client-classes: "{{ dhcp4_client_classes }}"
+  # Below an example of the simple subnet declarations
     subnet4: []
     #   - subnet: 192.0.2.0/24
     #     next-server: 192.0.2.234
@@ -93,6 +102,30 @@ kea_dhcp_dhcp4_config:
     # control-socket:
     #   socket-type: unix
     #   socket-name: /var/run/kea.socket
+  # A sample configuration for HA node follows
+    # hooks-libraries:
+    #   - library: "/usr/lib/kea/hooks/libdhcp_lease_cmds.so"
+    #     parameters:
+    #   - library: "/usr/lib/kea/hooks/libdhcp_ha.so"
+    #     parameters:
+    #       high-availability:
+    #         - this-server-name: "kea_dhcp_server_a"
+    #           mode: "hot-standby"
+    #           heartbeat-delay: 10000
+    #           max-response-delay: 50000
+    #           max-ack-delay: 5000
+    #           # ignore unacked clients, heartbeat is the only way to detect
+    #           # that the partner is down
+    #           max-unacked-clients: 0
+    #           peers:
+    #             - name: kea_dhcp_server_a
+    #               url: "http://1.2.3.4:1234"
+    #               role: primary
+    #               auto-failover: true
+    #             - name: kea_dhcp_server_b
+    #               url: "http://4.3.2.1:4321"
+    #               role: standby
+    #               auto-failover: true
   # Logging configuration starts here. It tells Kea servers to store
   # all log messages (on severity INFO or more) in a file.
   # debuglevel variable is used on DEBUG level only.
@@ -104,6 +137,33 @@ kea_dhcp_dhcp4_config:
         severity: INFO
         debuglevel: 0
 
+# The DHCPv6 configuration below is formatted appropriately to be 
+# converted directly to JSON using the kea-dhcp6.conf.j2 Jinja2 template.
+# If you need to add more settings/options below ensure they are added 
+# appropriately in YAML format in order to parse to JSON correctly.
+# Reference the below guide for more information
+# https://kea.readthedocs.io/en/kea-1.9.5/arm/dhcp6-srv.html
+kea_dhcp_dhcp6_config:
+  Dhcp6:
+  # First we set up global values
+    valid-lifetime: 4000
+    renew-timer: 1000
+    rebind-timer: 2000
+    preferred-lifetime: 3000
+  # Next we set up the interfaces to be used by the server.
+    interfaces-config:
+      interfaces: 
+        - eth0
+  # And we specify the type of lease database
+    lease-database:
+      type: memfile
+      persist: true
+      name: /var/lib/kea/dhcp6.leases
+  # Finally, we list the subnets from which we will be leasing addresses.
+    subnet6:
+      - subnet: "2001:db8:1::/64"
+        pools:
+          - pool: "2001:db8:1::1-2001:db8:1::ffff"
 
 
 # The DHCP CTRL Agent configuration below is formatted appropriately to be 
@@ -114,8 +174,8 @@ kea_dhcp_dhcp4_config:
 # https://kea.readthedocs.io/en/kea-1.9.5/arm/agent.html
 kea_dhcp_ctrl_agent_config:
   Control-agent:
-    http-host: 127.0.0.1
-    http-port: 8000
+    http-host: 1.2.3.4
+    http-port: 1234
     control-sockets:
       dhcp4:
         socket-type: "unix"

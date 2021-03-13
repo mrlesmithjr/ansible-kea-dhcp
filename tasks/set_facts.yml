@@ -254,3 +254,16 @@
       - name: kea-dhcp6
         enabled: "{{ kea_dhcp_service_state['ipv6']|bool }}"
   when: ansible_os_family == "RedHat"
+
+- name: set_facts | Setting Services Configuration Files
+  set_fact:
+    kea_dhcp_services_config:
+      - name: etc/kea/kea-ctrl-agent.conf
+        enabled: "{{ kea_dhcp_service_state['ctrl-agent']|bool }}"
+      - name: etc/kea/kea-dhcp-ddns.conf
+        enabled: "{{ kea_dhcp_service_state['ddns']|bool }}"
+      - name: etc/kea/kea-dhcp4.conf
+        enabled: "{{ kea_dhcp_service_state['ipv4']|bool }}"
+      - name: etc/kea/kea-dhcp6.conf
+        enabled: "{{ kea_dhcp_service_state['ipv6']|bool }}"
+  when: kea_dhcp_config|bool
