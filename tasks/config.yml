@@ -1,8 +1,8 @@
 ---
 - name: config | Configuring Kea DHCP
   template:
-    src: "{{ item + '.j2' }}"
-    dest: "{{ '/' + item }}"
+    src: "{{ item['name'] + '.j2' }}"
+    dest: "{{ '/' + item['name'] }}"
     owner: root
     group: root
     mode: o=rw,g=r,o=r
@@ -10,3 +10,5 @@
     - restart kea-dhcp
   become: true
   loop: "{{ kea_dhcp_services_config }}"
+  when:
+    - item['enabled']|bool
