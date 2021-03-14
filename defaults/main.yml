@@ -105,7 +105,6 @@ kea_dhcp_dhcp4_config:
   # A sample configuration for HA node follows
     # hooks-libraries:
     #   - library: "/usr/lib/kea/hooks/libdhcp_lease_cmds.so"
-    #     parameters:
     #   - library: "/usr/lib/kea/hooks/libdhcp_ha.so"
     #     parameters:
     #       high-availability:
