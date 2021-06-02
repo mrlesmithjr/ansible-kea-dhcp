@@ -104,8 +104,8 @@ kea_dhcp_dhcp4_config:
     #   socket-name: /var/run/kea.socket
   # A sample configuration for HA node follows
     # hooks-libraries:
-    #   - library: "/usr/lib/kea/hooks/libdhcp_lease_cmds.so"
-    #   - library: "/usr/lib/kea/hooks/libdhcp_ha.so"
+    #   - library: "{{ kea_dhcp_hooks_dir }}/libdhcp_lease_cmds.so"
+    #   - library: "{{ kea_dhcp_hooks_dir }}/libdhcp_ha.so"
     #     parameters:
     #       high-availability:
     #         - this-server-name: "kea_dhcp_server_a"

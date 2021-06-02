@@ -11,6 +11,7 @@
       - mariadb-connector-c
       - socat
       - log4cplus
+    kea_dhcp_hooks_dir: "/usr/lib/kea/hooks"
   when:
     - ansible_distribution == "Alpine"
 
@@ -20,6 +21,8 @@
       - apt-transport-https
       - debian-archive-keyring
       - debian-keyring
+      - gpg
+    kea_dhcp_hooks_dir: "/usr/lib/x86_64-linux-gnu/kea/hooks"
   when:
     - ansible_distribution == "Debian"
 
@@ -27,6 +30,8 @@
   set_fact:
     kea_dhcp_pre_reqs:
       - apt-transport-https
+      - gpg
+    kea_dhcp_hooks_dir: "/usr/lib/x86_64-linux-gnu/kea/hooks"
   when:
     - ansible_distribution == "Ubuntu"
 
@@ -34,6 +39,7 @@
   set_fact:
     kea_dhcp_pre_reqs:
       - yum-utils
+    kea_dhcp_hooks_dir: "/usr/lib64/kea/hooks"
   when:
     - ansible_os_family == "RedHat"
 
@@ -181,6 +187,7 @@
   set_fact:
     kea_dhcp_packages:
       - isc-kea
+      - isc-kea-hooks
   when:
     - ansible_os_family == "RedHat"
 
