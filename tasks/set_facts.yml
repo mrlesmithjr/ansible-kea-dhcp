@@ -1,10 +1,28 @@
 ---
+- name: set_facts | Setting Alpine Pre-Reqs
+  set_fact:
+    kea_dhcp_pre_reqs:
+      - musl
+      - libgcc
+      - libstdc++
+      - botan-libs
+      - busybox
+      - libpq
+      - mariadb-connector-c
+      - socat
+      - log4cplus
+    kea_dhcp_hooks_dir: "/usr/lib/kea/hooks"
+  when:
+    - ansible_distribution == "Alpine"
+
 - name: set_facts | Setting Debian Pre-Reqs
   set_fact:
     kea_dhcp_pre_reqs:
       - apt-transport-https
       - debian-archive-keyring
       - debian-keyring
+      - gpg
+    kea_dhcp_hooks_dir: "/usr/lib/x86_64-linux-gnu/kea/hooks"
   when:
     - ansible_distribution == "Debian"
 
@@ -12,6 +30,8 @@
   set_fact:
     kea_dhcp_pre_reqs:
       - apt-transport-https
+      - gpg
+    kea_dhcp_hooks_dir: "/usr/lib/x86_64-linux-gnu/kea/hooks"
   when:
     - ansible_distribution == "Ubuntu"
 
@@ -19,8 +39,40 @@
   set_fact:
     kea_dhcp_pre_reqs:
       - yum-utils
+    kea_dhcp_hooks_dir: "/usr/lib64/kea/hooks"
   when:
     - ansible_os_family == "RedHat"
+
+- name: set_facts | Setting Repo Info (Alpine)
+  set_fact:
+    kea_dhcp_repo: "{{ kea_dhcp_repos }}/kea-1-7/alpine/v{{ ansible_distribution_version | splitext | first }}/main"
+    kea_dhcp_repo_key: "{{ kea_dhcp_repos }}/kea-1-7/rsa.404DA573862EE3BE.key"
+    kea_dhcp_repo_key_location: "/etc/apk/keys/kea-1-7@isc-404DA573862EE3BE.rsa.pub"
+  when:
+    - ansible_os_family == "Alpine"
+    - kea_dhcp_version is version('1.7', '>=')
+    - kea_dhcp_version is version('1.8', '<')
+
+- name: set_facts | Setting Repo Info (Alpine)
+  set_fact:
+    kea_dhcp_repo: "{{ kea_dhcp_repos }}/kea-1-8/alpine/v{{ ansible_distribution_version | splitext | first }}/main"
+    kea_dhcp_repo_key: "{{ kea_dhcp_repos }}/kea-1-8/rsa.1570C74FEAD03977.key"
+    kea_dhcp_repo_key_location: "/etc/apk/keys/kea-1-8@isc-1570C74FEAD03977.rsa.pub"
+
+  when:
+    - ansible_os_family == "Alpine"
+    - kea_dhcp_version is version('1.8', '>=')
+    - kea_dhcp_version is version('1.9', '<')
+
+- name: set_facts | Setting Repo Info (Alpine)
+  set_fact:
+    kea_dhcp_repo: "{{ kea_dhcp_repos }}/kea-1-9/alpine/v{{ ansible_distribution_version | splitext | first }}/main"
+    kea_dhcp_repo_key: "{{ kea_dhcp_repos }}/kea-1-9/rsa.CD3D76A635E16234.key"
+    kea_dhcp_repo_key_location: "/etc/apk/keys/kea-1-9@isc-CD3D76A635E16234.rsa.pub"
+  when:
+    - ansible_os_family == "Alpine"
+    - kea_dhcp_version is version('1.9', '>=')
+    - kea_dhcp_version is version('1.10', '<')
 
 - name: set_facts | Setting Repo Info (Debian)
   set_fact:
@@ -40,6 +92,24 @@
     - kea_dhcp_version is version('1.7', '>=')
     - kea_dhcp_version is version('1.8', '<')
 
+- name: set_facts | Setting Repo Info (Debian)
+  set_fact:
+    kea_dhcp_repo: "{{ 'deb '+kea_dhcp_repos+'/kea-1-8/deb/'+ansible_distribution|lower+' '+ansible_distribution_release|lower+' main' }}"
+    kea_dhcp_repo_key: "{{ kea_dhcp_repos+'/kea-1-8/cfg/gpg/gpg.4DD5AE28ADA7268E.key' }}"
+  when:
+    - ansible_os_family == "Debian"
+    - kea_dhcp_version is version('1.8', '>=')
+    - kea_dhcp_version is version('1.9', '<')
+
+- name: set_facts | Setting Repo Info (Debian)
+  set_fact:
+    kea_dhcp_repo: "{{ 'deb '+kea_dhcp_repos+'/kea-1-9/deb/'+ansible_distribution|lower+' '+ansible_distribution_release|lower+' main' }}"
+    kea_dhcp_repo_key: "{{ kea_dhcp_repos+'/kea-1-9/cfg/gpg/gpg.5DC67B0A74E30739.key' }}"
+  when:
+    - ansible_os_family == "Debian"
+    - kea_dhcp_version is version('1.9', '>=')
+    - kea_dhcp_version is version('1.10', '<')
+
 - name: set_facts | Setting Repo Info (RedHat)
   set_fact:
     kea_dhcp_repo_key: "{{ kea_dhcp_repos+'/kea-1-7/cfg/gpg/gpg.40544590508A17DE.key' }}"
@@ -48,10 +118,41 @@
     - kea_dhcp_version is version('1.7', '>=')
     - kea_dhcp_version is version('1.8', '<')
 
+- name: set_facts | Setting Repo Info (RedHat)
+  set_fact:
+    kea_dhcp_repo_key: "{{ kea_dhcp_repos+'/kea-1-8/cfg/gpg/gpg.4DD5AE28ADA7268E.key' }}"
+  when:
+    - ansible_os_family == "RedHat"
+    - kea_dhcp_version is version('1.8', '>=')
+    - kea_dhcp_version is version('1.9', '<')
+
+- name: set_facts | Setting Repo Info (RedHat)
+  set_fact:
+    kea_dhcp_repo_key: "{{ kea_dhcp_repos+'/kea-1-9/cfg/gpg/gpg.5DC67B0A74E30739.key' }}"
+  when:
+    - ansible_os_family == "RedHat"
+    - kea_dhcp_version is version('1.9', '>=')
+    - kea_dhcp_version is version('1.10', '<')
+
+- name: set_facts | Setting Kea Packages (Alpine)
+  set_fact:
+    kea_dhcp_packages:
+      - isc-kea
+      - isc-kea-admin
+      - isc-kea-ctrl-agent
+      - isc-kea-dhcp-ddns
+      - isc-kea-http
+      - isc-kea-hook-ha
+      - isc-kea-hook-lease-cmds
+      - isc-kea-hook-mysql-cb
+  when:
+    - ansible_distribution == "Alpine"
+
 - name: set_facts | Setting Kea Packages (Debian)
   set_fact:
     kea_dhcp_packages:
       - isc-kea-admin
+      - isc-kea-ctrl-agent
       - isc-kea-dhcp-ddns-server
       - isc-kea-dhcp4-server
       - isc-kea-dhcp6-server
@@ -62,6 +163,7 @@
   set_fact:
     kea_dhcp_packages:
       - kea-admin
+      - kea-ctrl-agent
       - kea-dhcp-ddns-server
       - kea-dhcp4-server
       - kea-dhcp6-server
@@ -73,6 +175,7 @@
   set_fact:
     kea_dhcp_packages:
       - isc-kea-admin
+      - isc-kea-ctrl-agent
       - isc-kea-dhcp-ddns-server
       - isc-kea-dhcp4-server
       - isc-kea-dhcp6-server
@@ -84,12 +187,29 @@
   set_fact:
     kea_dhcp_packages:
       - isc-kea
+      - isc-kea-hooks
   when:
     - ansible_os_family == "RedHat"
+
+- name: set_facts | Setting Services Facts (Alpine)
+  set_fact:
+    kea_dhcp_services:
+      - name: kea-ctrl-agent
+        enabled: "{{ kea_dhcp_service_state['ctrl-agent']|bool }}"
+      - name: kea-dhcp-ddns
+        enabled: "{{ kea_dhcp_service_state['ddns']|bool }}"
+      - name: kea-dhcp4
+        enabled: "{{ kea_dhcp_service_state['ipv4']|bool }}"
+      - name: kea-dhcp6
+        enabled: "{{ kea_dhcp_service_state['ipv6']|bool }}"
+  when:
+    - ansible_distribution == "Alpine"
 
 - name: set_facts | Setting Services Facts (Debian)
   set_fact:
     kea_dhcp_services:
+      - name: isc-kea-ctrl-agent
+        enabled: "{{ kea_dhcp_service_state['ctrl-agent']|bool }}"
       - name: isc-kea-dhcp-ddns-server
         enabled: "{{ kea_dhcp_service_state['ddns']|bool }}"
       - name: isc-kea-dhcp4-server
@@ -102,6 +222,8 @@
 - name: set_facts | Setting Services Facts (Ubuntu)
   set_fact:
     kea_dhcp_services:
+      - name: kea-ctrl-agent
+        enabled: "{{ kea_dhcp_service_state['ctrl-agent']|bool }}"
       - name: kea-dhcp-ddns-server
         enabled: "{{ kea_dhcp_service_state['ddns']|bool }}"
       - name: kea-dhcp4-server
@@ -115,6 +237,8 @@
 - name: set_facts | Setting Services Facts (Ubuntu)
   set_fact:
     kea_dhcp_services:
+      - name: isc-kea-ctrl-agent
+        enabled: "{{ kea_dhcp_service_state['ctrl-agent']|bool }}"
       - name: isc-kea-dhcp-ddns-server
         enabled: "{{ kea_dhcp_service_state['ddns']|bool }}"
       - name: isc-kea-dhcp4-server
@@ -128,6 +252,8 @@
 - name: set_facts | Setting Services Facts (RedHat)
   set_fact:
     kea_dhcp_services:
+      - name: kea-ctrl-agent
+        enabled: "{{ kea_dhcp_service_state['ctrl-agent']|bool }}"
       - name: kea-dhcp-ddns
         enabled: "{{ kea_dhcp_service_state['ddns']|bool }}"
       - name: kea-dhcp4
@@ -135,3 +261,16 @@
       - name: kea-dhcp6
         enabled: "{{ kea_dhcp_service_state['ipv6']|bool }}"
   when: ansible_os_family == "RedHat"
+
+- name: set_facts | Setting Services Configuration Files
+  set_fact:
+    kea_dhcp_services_config:
+      - name: etc/kea/kea-ctrl-agent.conf
+        enabled: "{{ kea_dhcp_service_state['ctrl-agent']|bool }}"
+      - name: etc/kea/kea-dhcp-ddns.conf
+        enabled: "{{ kea_dhcp_service_state['ddns']|bool }}"
+      - name: etc/kea/kea-dhcp4.conf
+        enabled: "{{ kea_dhcp_service_state['ipv4']|bool }}"
+      - name: etc/kea/kea-dhcp6.conf
+        enabled: "{{ kea_dhcp_service_state['ipv6']|bool }}"
+  when: kea_dhcp_config|bool
