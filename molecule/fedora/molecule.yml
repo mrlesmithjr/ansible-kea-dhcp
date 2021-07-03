@@ -5,7 +5,7 @@ dependency:
   options:
     role-file: requirements.yml
 driver:
-  name: docker
+  name: podman
 lint: |
   yamllint .
   ansible-lint
