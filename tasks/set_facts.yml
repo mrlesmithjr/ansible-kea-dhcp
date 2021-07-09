@@ -21,6 +21,16 @@
       - yum-utils
   when:
     - ansible_os_family == "RedHat"
+    - ansible_distribution == "RedHat"
+
+- name: set_facts | Setting Fedora Pre-Reqs
+  set_fact:
+    kea_dhcp_pre_reqs:
+      - dnf-utils
+  when:
+    - ansible_os_family == "RedHat"
+    - ansible_distribution == "Fedora"
+    - ansible_distribution_major_version is version('33', '>=')
 
 - name: set_facts | Setting Repo Info (Debian)
   set_fact:
@@ -45,6 +55,7 @@
     kea_dhcp_repo_key: "{{ kea_dhcp_repos+'/kea-1-7/cfg/gpg/gpg.40544590508A17DE.key' }}"
   when:
     - ansible_os_family == "RedHat"
+    - ansible_distribution != "Fedora"
     - kea_dhcp_version is version('1.7', '>=')
     - kea_dhcp_version is version('1.8', '<')
 
@@ -86,6 +97,14 @@
       - isc-kea
   when:
     - ansible_os_family == "RedHat"
+    - ansible_distribution != "Fedora"
+
+- name: set_facts | Setting Kea Packages (Fedora)
+  set_fact:
+    kea_dhcp_packages:
+      - kea
+  when:
+    - ansible_distribution == "Fedora"
 
 - name: set_facts | Setting Services Facts (Debian)
   set_fact:

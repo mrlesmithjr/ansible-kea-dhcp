@@ -21,6 +21,7 @@
     key: "{{ kea_dhcp_repo_key }}"
     state: present
   become: true
+  when: ansible_distribution != "Fedora"
 
 - name: redhat | Kea DHCP 1.7
   block:
@@ -60,6 +61,8 @@
   when:
     - kea_dhcp_version is version('1.7', '>=')
     - kea_dhcp_version is version('1.8', '<')
+    - ansible_distribution != "Fedora"
+
 
 - name: redhat | Installing Kea DHCP Packages
   package:
