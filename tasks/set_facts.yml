@@ -104,6 +104,32 @@
 - name: set_facts | Setting Repo Info (Debian)
   set_fact:
     kea_dhcp_repo: "{{ 'deb '+kea_dhcp_repos+'/kea-1-9/deb/'+ansible_distribution|lower+' '+ansible_distribution_release|lower+' main' }}"
+    kea_dhcp_repo_key: "{{ kea_dhcp_repos+'/kea-1-9/cfg/gpg/gpg.4DD5AE28ADA7268E.key' }}"
+  when:
+    - ansible_os_family == "Debian"
+    - kea_dhcp_version is version('1.9', '>=')
+    - kea_dhcp_version is version('2.0', '<')
+
+- name: set_facts | Setting Repo Info (Debian)
+  set_fact:
+    kea_dhcp_repo: "{{ 'deb '+kea_dhcp_repos+'/kea-2-0/deb/'+ansible_distribution|lower+' '+ansible_distribution_release|lower+' main' }}"
+    kea_dhcp_repo_key: "{{ kea_dhcp_repos+'/kea-2-0/cfg/gpg/gpg.8029D4AFA58CBB5E.key' }}"
+  when:
+    - ansible_os_family == "Debian"
+    - kea_dhcp_version is version('2.0', '>=')
+    - kea_dhcp_version is version('2.1', '<')
+
+- name: set_facts | Setting Repo Info (Debian)
+  set_fact:
+    kea_dhcp_repo: "{{ 'deb '+kea_dhcp_repos+'/kea-2-1/deb/'+ansible_distribution|lower+' '+ansible_distribution_release|lower+' main' }}"
+    kea_dhcp_repo_key: "{{ kea_dhcp_repos+'/kea-2-1/cfg/gpg/gpg.32D53EC4807EC10E.key' }}"
+  when:
+    - ansible_os_family == "Debian"
+    - kea_dhcp_version is version('2.1', '>=')
+    - kea_dhcp_version is version('2.2', '<')
+- name: set_facts | Setting Repo Info (Debian)
+  set_fact:
+    kea_dhcp_repo: "{{ 'deb '+kea_dhcp_repos+'/kea-1-9/deb/'+ansible_distribution|lower+' '+ansible_distribution_release|lower+' main' }}"
     kea_dhcp_repo_key: "{{ kea_dhcp_repos+'/kea-1-9/cfg/gpg/gpg.5DC67B0A74E30739.key' }}"
   when:
     - ansible_os_family == "Debian"
