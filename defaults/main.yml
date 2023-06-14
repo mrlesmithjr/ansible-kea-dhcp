@@ -10,9 +10,11 @@ kea_dhcp_service_state:
   ipv4: true
   ipv6: false
   ctrl-agent: true
+  netconf: false
 
 # The DHCP DDNS configuration below is formatted appropriately to be converted
 # directly to JSON using the kea-dhcp-ddns.conf.j2 Jinja2 template.
+# https://kea.readthedocs.io/en/kea-2.3.8/arm/ddns.html
 kea_dhcp_ddns_config:
   DhcpDdns:
     ip-address: 127.0.0.1
@@ -33,7 +35,7 @@ kea_dhcp_ddns_config:
 # to add more settings/options below ensure they are added appropriately in
 # YAML format in order to parse to JSON correctly.
 # Reference the below guide for more information
-# http://kea.isc.org/docs/kea-guide.html#idp50527472
+# https://kea.readthedocs.io/en/kea-2.3.8/arm/dhcp4-srv.html
 kea_dhcp_dhcp4_config:
   Dhcp4:
     renew-timer: 1000
@@ -141,7 +143,7 @@ kea_dhcp_dhcp4_config:
 # If you need to add more settings/options below ensure they are added 
 # appropriately in YAML format in order to parse to JSON correctly.
 # Reference the below guide for more information
-# https://kea.readthedocs.io/en/kea-1.9.5/arm/dhcp6-srv.html
+# https://kea.readthedocs.io/en/kea-2.3.8/arm/dhcp6-srv.html
 kea_dhcp_dhcp6_config:
   Dhcp6:
   # First we set up global values
@@ -170,7 +172,7 @@ kea_dhcp_dhcp6_config:
 # If you need to add more settings/options below ensure they are added 
 # appropriately in YAML format in order to parse to JSON correctly.
 # Reference the below guide for more information
-# https://kea.readthedocs.io/en/kea-1.9.5/arm/agent.html
+# https://kea.readthedocs.io/en/kea-2.3.8/arm/agent.html
 kea_dhcp_ctrl_agent_config:
   Control-agent:
     http-host: 1.2.3.4
@@ -194,4 +196,4 @@ kea_dhcp_pri_domain_name: vagrant.local
 
 kea_dhcp_repos: https://dl.cloudsmith.io/public/isc
 
-kea_dhcp_version: 1.7
+kea_dhcp_version: 2.3
