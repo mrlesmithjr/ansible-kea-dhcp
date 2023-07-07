@@ -10,7 +10,6 @@ kea_dhcp_service_state:
   ipv4: true
   ipv6: false
   ctrl-agent: true
-  netconf: false
 
 # The DHCP DDNS configuration below is formatted appropriately to be converted
 # directly to JSON using the kea-dhcp-ddns.conf.j2 Jinja2 template.
@@ -63,7 +62,9 @@ kea_dhcp_dhcp4_config:
   # Global (inherited by all subnets) lease lifetime is mandatory parameter.
     valid-lifetime: 4000
   # Reservations are not in pool / faster look-up
-    # reservation-mode: out-of-pool
+    # reservations-global: false
+    # reservations-in-subnet: false
+    # reservations-out-of-pool: true
   # Check only MAC address, ignore DUID or client-id
     # host-reservation-identifiers:
     #   - hw-address
