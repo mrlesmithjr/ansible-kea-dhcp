@@ -1,6 +1,12 @@
 ---
 # tasks file for ansible-kea-dhcp
-- include_tasks: set_facts.yml
+- include_tasks:
+    file: set_facts.yml
+    apply:
+      tags:
+        - config
+  tags:
+    - config
 
 - include_tasks: alpine.yml
   when: ansible_os_family == "Alpine"
@@ -11,7 +17,13 @@
 - include_tasks: redhat.yml
   when: ansible_os_family == "RedHat"
 
-- include_tasks: config.yml
+- include_tasks:
+    file: config.yml
+    apply:
+      tags:
+        - config
   when: kea_dhcp_config|bool
+  tags:
+    - config
 
 - include_tasks: services.yml
