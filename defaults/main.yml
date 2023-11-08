@@ -197,4 +197,4 @@ kea_dhcp_pri_domain_name: vagrant.local
 
 kea_dhcp_repos: https://dl.cloudsmith.io/public/isc
 
-kea_dhcp_version: 2.3
+kea_dhcp_version: 2.5
