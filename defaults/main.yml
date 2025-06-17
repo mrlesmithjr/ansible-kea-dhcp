@@ -9,9 +9,11 @@ kea_dhcp_service_state:
   ddns: true
   ipv4: true
   ipv6: false
+  ctrl-agent: true
 
 # The DHCP DDNS configuration below is formatted appropriately to be converted
 # directly to JSON using the kea-dhcp-ddns.conf.j2 Jinja2 template.
+# https://kea.readthedocs.io/en/kea-2.3.8/arm/ddns.html
 kea_dhcp_ddns_config:
   DhcpDdns:
     ip-address: 127.0.0.1
@@ -32,24 +34,24 @@ kea_dhcp_ddns_config:
 # to add more settings/options below ensure they are added appropriately in
 # YAML format in order to parse to JSON correctly.
 # Reference the below guide for more information
-# http://kea.isc.org/docs/kea-guide.html#idp50527472
+# https://kea.readthedocs.io/en/kea-2.3.8/arm/dhcp4-srv.html
 kea_dhcp_dhcp4_config:
   Dhcp4:
     renew-timer: 1000
     rebind-timer: 2000
-    # Add names of interfaces to listen on
+  # Add names of interfaces to listen on
     interfaces-config:
       interfaces:
         - "*"
         # - eth0
         # - eth1
       dhcp-socket-type: raw
-    # Use Memfile lease database backend to store leases in a CSV file.
+  # Use Memfile lease database backend to store leases in a CSV file.
     lease-database:
       type: memfile
       persist: true
       lfc-interval: 0
-    # Setup reclamation of the expired leases and leases affinity.
+  # Setup reclamation of the expired leases and leases affinity.
     expired-leases-processing:
       reclaim-timer-wait-time: 10
       flush-reclaimed-timer-wait-time: 25
@@ -57,9 +59,20 @@ kea_dhcp_dhcp4_config:
       max-reclaim-leases: 100
       max-reclaim-time: 250
       unwarned-reclaim-cycles: 5
-    # Global (inherited by all subnets) lease lifetime is mandatory parameter.
+  # Global (inherited by all subnets) lease lifetime is mandatory parameter.
     valid-lifetime: 4000
-    # Below an example of the simple subnet declarations
+  # Reservations are not in pool / faster look-up
+    # reservations-global: false
+    # reservations-in-subnet: false
+    # reservations-out-of-pool: true
+  # Check only MAC address, ignore DUID or client-id
+    # host-reservation-identifiers:
+    #   - hw-address
+  # custom options for Juniper ZTP etc.
+    # option-def: "{{ dhcp4_option_defs }}"
+  # custom client classes for Juniper ZTP etc.
+    # client-classes: "{{ dhcp4_client_classes }}"
+  # Below an example of the simple subnet declarations
     subnet4: []
     #   - subnet: 192.0.2.0/24
     #     next-server: 192.0.2.234
@@ -92,6 +105,29 @@ kea_dhcp_dhcp4_config:
     # control-socket:
     #   socket-type: unix
     #   socket-name: /var/run/kea.socket
+  # A sample configuration for HA node follows
+    # hooks-libraries:
+    #   - library: "{{ kea_dhcp_hooks_dir }}/libdhcp_lease_cmds.so"
+    #   - library: "{{ kea_dhcp_hooks_dir }}/libdhcp_ha.so"
+    #     parameters:
+    #       high-availability:
+    #         - this-server-name: "kea_dhcp_server_a"
+    #           mode: "hot-standby"
+    #           heartbeat-delay: 10000
+    #           max-response-delay: 50000
+    #           max-ack-delay: 5000
+    #           # ignore unacked clients, heartbeat is the only way to detect
+    #           # that the partner is down
+    #           max-unacked-clients: 0
+    #           peers:
+    #             - name: kea_dhcp_server_a
+    #               url: "http://1.2.3.4:1234"
+    #               role: primary
+    #               auto-failover: true
+    #             - name: kea_dhcp_server_b
+    #               url: "http://4.3.2.1:4321"
+    #               role: standby
+    #               auto-failover: true
   # Logging configuration starts here. It tells Kea servers to store
   # all log messages (on severity INFO or more) in a file.
   # debuglevel variable is used on DEBUG level only.
@@ -103,18 +139,62 @@ kea_dhcp_dhcp4_config:
         severity: INFO
         debuglevel: 0
 
-# Defines Kea DHCP RedHat services should be enabled
-# kea_dhcp_redhat_services:
-#   - name: kea-dhcp-ddns
-#     enabled: true
-#   - name: kea-dhcp4
-#     enabled: true
-#   - name: kea-dhcp6
-#     enabled: false
+# The DHCPv6 configuration below is formatted appropriately to be 
+# converted directly to JSON using the kea-dhcp6.conf.j2 Jinja2 template.
+# If you need to add more settings/options below ensure they are added 
+# appropriately in YAML format in order to parse to JSON correctly.
+# Reference the below guide for more information
+# https://kea.readthedocs.io/en/kea-2.3.8/arm/dhcp6-srv.html
+kea_dhcp_dhcp6_config:
+  Dhcp6:
+  # First we set up global values
+    valid-lifetime: 4000
+    renew-timer: 1000
+    rebind-timer: 2000
+    preferred-lifetime: 3000
+  # Next we set up the interfaces to be used by the server.
+    interfaces-config:
+      interfaces: 
+        - eth0
+  # And we specify the type of lease database
+    lease-database:
+      type: memfile
+      persist: true
+      name: /var/lib/kea/dhcp6.leases
+  # Finally, we list the subnets from which we will be leasing addresses.
+    subnet6:
+      - subnet: "2001:db8:1::/64"
+        pools:
+          - pool: "2001:db8:1::1-2001:db8:1::ffff"
+
+
+# The DHCP CTRL Agent configuration below is formatted appropriately to be 
+# converted directly to JSON using the kea-dhcp4.conf.j2 Jinja2 template.
+# If you need to add more settings/options below ensure they are added 
+# appropriately in YAML format in order to parse to JSON correctly.
+# Reference the below guide for more information
+# https://kea.readthedocs.io/en/kea-2.3.8/arm/agent.html
+kea_dhcp_ctrl_agent_config:
+  Control-agent:
+    http-host: 1.2.3.4
+    http-port: 1234
+    control-sockets:
+      dhcp4:
+        socket-type: "unix"
+        socket-name: "/var/run/kea.socket"
+    loggers:
+      - name: "kea-ctrl-agent"
+        output_options:
+          - output: "/var/log/kea/kea-ctrl-agent.log"
+            flush: true
+            maxsize: 1048576
+            maxver: 8
+        severity: "INFO"
+
 
 # Defines primary domain name of environment
 kea_dhcp_pri_domain_name: vagrant.local
 
 kea_dhcp_repos: https://dl.cloudsmith.io/public/isc
 
-kea_dhcp_version: 1.7
+kea_dhcp_version: 2.5

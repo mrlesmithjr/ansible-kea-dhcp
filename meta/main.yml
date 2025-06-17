@@ -8,6 +8,8 @@ galaxy_info:
   platforms:
     - name: Debian
       versions:
+        - bookworm
+        - bullseye
         - buster
         - stretch
     - name: EL
@@ -16,6 +18,7 @@ galaxy_info:
         - 8
     - name: Ubuntu
       versions:
+        - jammy
         - bionic
         - xenial
 
