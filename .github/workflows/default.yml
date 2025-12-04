@@ -31,37 +31,31 @@ jobs:
       - name: Run ansible-lint
         run: ansible-lint . || true
 
-  molecule:
-    runs-on: ubuntu-latest
-    needs: lint
-    strategy:
-      fail-fast: false
-      matrix:
-        scenario:
-          - debian10
-        python-version:
-          - "3.11"
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install ansible molecule molecule-plugins[docker] docker ansible-lint
-
-      - name: Display versions
-        run: |
-          ansible --version
-          molecule --version
-
-      - name: Run Molecule tests
-        run: molecule test --scenario-name ${{ matrix.scenario }}
-        env:
-          PY_COLORS: "1"
-          ANSIBLE_FORCE_COLOR: "1"
+  # NOTE: Molecule tests are disabled until scenarios are updated for current OS versions
+  # All existing scenarios (debian10, centos7/8, ubuntu1604/1804) are for EOL distributions
+  # TODO: Create new molecule scenarios for debian11/12, ubuntu22.04/24.04, rocky8/9
+  # molecule:
+  #   runs-on: ubuntu-latest
+  #   needs: lint
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       scenario:
+  #         - debian11
+  #       python-version:
+  #         - "3.11"
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Set up Python ${{ matrix.python-version }}
+  #       uses: actions/setup-python@v5
+  #       with:
+  #         python-version: ${{ matrix.python-version }}
+  #     - name: Install dependencies
+  #       run: |
+  #         python -m pip install --upgrade pip
+  #         pip install ansible molecule molecule-plugins[docker] docker ansible-lint
+  #     - name: Run Molecule tests
+  #       run: molecule test --scenario-name ${{ matrix.scenario }}
+  #       env:
+  #         PY_COLORS: "1"
+  #         ANSIBLE_FORCE_COLOR: "1"
