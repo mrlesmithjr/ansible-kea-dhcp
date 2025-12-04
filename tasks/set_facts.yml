@@ -244,11 +244,11 @@
 - name: set_facts | Setting Kea Packages (Ubuntu)
   set_fact:
     kea_dhcp_packages:
-      - isc-kea-admin
-      - isc-kea-ctrl-agent
-      - isc-kea-dhcp-ddns-server
-      - isc-kea-dhcp4-server
-      - isc-kea-dhcp6-server
+      - kea-admin
+      - kea-ctrl-agent
+      - kea-dhcp-ddns-server
+      - kea-dhcp4-server
+      - kea-dhcp6-server
   when:
     - ansible_distribution == "Ubuntu"
     - ansible_distribution_version is version('18.04', '>=')
@@ -313,16 +313,16 @@
 - name: set_facts | Setting Services Facts (Ubuntu)
   set_fact:
     kea_dhcp_services:
-      - name: isc-kea-ctrl-agent
+      - name: kea-ctrl-agent
         enabled: "{{ kea_dhcp_service_state['ctrl-agent']|bool }}"
-      - name: isc-kea-dhcp-ddns-server
+      - name: kea-dhcp-ddns-server
         enabled: "{{ kea_dhcp_service_state['ddns']|bool }}"
-      - name: isc-kea-dhcp4-server
+      - name: kea-dhcp4-server
         enabled: "{{ kea_dhcp_service_state['ipv4']|bool }}"
-      - name: isc-kea-dhcp6-server
+      - name: kea-dhcp6-server
         enabled: "{{ kea_dhcp_service_state['ipv6']|bool }}"
-      - name: isc-kea-netconf-server
-        enabled: "{{ kea_dhcp_service_state['netconf']|bool }}"
+      # - name: kea-netconf-server
+      #   enabled: "{{ kea_dhcp_service_state['netconf']|bool }}"
   when:
     - ansible_distribution == "Ubuntu"
     - ansible_distribution_version is version('18.04', '>=')
