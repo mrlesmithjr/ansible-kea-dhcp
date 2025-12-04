@@ -62,10 +62,9 @@
         control-socket:
           socket-type: unix
           socket-name: /var/run/kea.socket
-      # Logging configuration starts here. It tells Kea servers to store
-      # all log messages (on severity INFO or more) in a file.
-      # debuglevel variable is used on DEBUG level only.
-      Logging:
+        # Logging configuration starts here. It tells Kea servers to store
+        # all log messages (on severity INFO or more) in a file.
+        # debuglevel variable is used on DEBUG level only.
         loggers:
           - name: kea-dhcp4
             output_options:
