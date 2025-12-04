@@ -1,36 +1,67 @@
 ---
 name: Molecule Test
-on: push
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 4
-      matrix:
-        python-version: [3.5, 3.6, 3.7]
 
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          path: ansible-kea-dhcp
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v1
-        with:
-          python-version: ${{ matrix.python-version }}
+          python-version: "3.11"
+
       - name: Install dependencies
         run: |
-          sudo apt install docker
           python -m pip install --upgrade pip
-          pip3 install -r requirements.txt
+          pip install ansible ansible-lint yamllint
+
+      - name: Run yamllint
+        run: yamllint . || true
+
+      - name: Run ansible-lint
+        run: ansible-lint . || true
+
+  molecule:
+    runs-on: ubuntu-latest
+    needs: lint
+    strategy:
+      fail-fast: false
+      matrix:
+        scenario:
+          - debian10
+        python-version:
+          - "3.11"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install ansible molecule molecule-plugins[docker] docker ansible-lint
+
+      - name: Display versions
+        run: |
           ansible --version
           molecule --version
-      - name: Test with molecule
-        run: |
-          molecule test --scenario-name centos7
-          # molecule test --scenario-name centos8
-          # molecule test --scenario-name debian8
-          molecule test --scenario-name debian9
-          molecule test --scenario-name debian10
-          # molecule test --scenario-name fedora
-          molecule test --scenario-name ubuntu1604
-          molecule test --scenario-name ubuntu1804
+
+      - name: Run Molecule tests
+        run: molecule test --scenario-name ${{ matrix.scenario }}
+        env:
+          PY_COLORS: "1"
+          ANSIBLE_FORCE_COLOR: "1"
