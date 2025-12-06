@@ -1,0 +1,9 @@
+---
+- name: suse | Installing Kea DHCP Packages
+  package:
+    name: "{{ kea_dhcp_packages }}"
+    state: present
+  become: true
+  register: result
+  until: result is successful
+

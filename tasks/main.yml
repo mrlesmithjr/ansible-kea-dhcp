@@ -8,6 +8,9 @@
 - include_tasks: redhat.yml
   when: ansible_os_family == "RedHat"
 
+- include_tasks: suse.yml
+  when: ansible_os_family == "Suse"
+
 - include_tasks: services.yml
 
 - include_tasks: config.yml
