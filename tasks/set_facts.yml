@@ -87,6 +87,13 @@
   when:
     - ansible_os_family == "RedHat"
 
+- name: set_facts | Setting Kea Packages (Suse)
+  set_fact:
+    kea_dhcp_packages:
+      - kea
+  when:
+    - ansible_os_family == "Suse"
+
 - name: set_facts | Setting Services Facts (Debian)
   set_fact:
     kea_dhcp_services:
@@ -135,3 +142,14 @@
       - name: kea-dhcp6
         enabled: "{{ kea_dhcp_service_state['ipv6']|bool }}"
   when: ansible_os_family == "RedHat"
+
+- name: set_facts | Setting Services Facts (Suse)
+  set_fact:
+    kea_dhcp_services:
+      - name: kea-dhcp-ddns
+        enabled: "{{ kea_dhcp_service_state['ddns']|bool }}"
+      - name: kea-dhcp4
+        enabled: "{{ kea_dhcp_service_state['ipv4']|bool }}"
+      - name: kea-dhcp6
+        enabled: "{{ kea_dhcp_service_state['ipv6']|bool }}"
+  when: ansible_os_family == "Suse"

@@ -21,6 +21,12 @@ galaxy_info:
         - focal
         - jammy
         - noble
+    - name: SLES
+      versions:
+        - all
+    - name: openSUSE
+      versions:
+        - all
 
   galaxy_tags:
     - networking
