@@ -87,8 +87,14 @@
   when:
     - ansible_os_family == "RedHat"
 
+- name: set_facts | Setting Suse Pre-Reqs
+  ansible.builtin.set_fact:
+    kea_dhcp_pre_reqs: []
+  when:
+    - ansible_os_family == "Suse"
+
 - name: set_facts | Setting Kea Packages (Suse)
-  set_fact:
+  ansible.builtin.set_fact:
     kea_dhcp_packages:
       - kea
   when:
@@ -144,7 +150,7 @@
   when: ansible_os_family == "RedHat"
 
 - name: set_facts | Setting Services Facts (Suse)
-  set_fact:
+  ansible.builtin.set_fact:
     kea_dhcp_services:
       - name: kea-dhcp-ddns
         enabled: "{{ kea_dhcp_service_state['ddns']|bool }}"
