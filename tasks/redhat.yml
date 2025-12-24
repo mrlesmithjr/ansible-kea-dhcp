@@ -1,6 +1,6 @@
 ---
 - name: redhat | Adding EPEL Repo
-  package:
+  ansible.builtin.package:
     name: epel-release
     state: present
   become: true
@@ -9,7 +9,7 @@
   when: ansible_distribution != "Fedora"
 
 - name: redhat | Installing Pre-Reqs
-  package:
+  ansible.builtin.package:
     name: "{{ kea_dhcp_pre_reqs }}"
     state: present
   become: true
@@ -17,15 +17,18 @@
   until: result is successful
 
 - name: redhat | Adding Kea DHCP Repo Key
-  rpm_key:
+  ansible.builtin.rpm_key:
     key: "{{ kea_dhcp_repo_key }}"
     state: present
   become: true
 
 - name: redhat | Kea DHCP 1.7
+  when:
+    - kea_dhcp_version is version('1.7', '>=')
+    - kea_dhcp_version is version('1.8', '<')
   block:
     - name: redhat | Adding Kea DHCP Repo
-      yum_repository:
+      ansible.builtin.yum_repository:
         name: isc-kea-1-7
         description: isc-kea-1-7
         baseurl: "{{ kea_dhcp_repos }}/kea-1-7/rpm/el/{{ hostvars[inventory_hostname].ansible_distribution_major_version }}/$basearch"
@@ -36,7 +39,7 @@
       become: true
 
     - name: redhat | Adding Kea DHCP Repo (noarch)
-      yum_repository:
+      ansible.builtin.yum_repository:
         name: isc-kea-1-7-noarch
         description: isc-kea-1-7-noarch
         baseurl: "{{ kea_dhcp_repos }}/kea-1-7/rpm/el/{{ hostvars[inventory_hostname].ansible_distribution_major_version }}/noarch"
@@ -47,7 +50,7 @@
       become: true
 
     - name: redhat | Adding Kea DHCP Repo (source)
-      yum_repository:
+      ansible.builtin.yum_repository:
         name: isc-kea-1-7-source
         description: isc-kea-1-7-source
         baseurl: "{{ kea_dhcp_repos }}/kea-1-7/rpm/el/{{ hostvars[inventory_hostname].ansible_distribution_major_version }}/SRPMS"
@@ -57,12 +60,8 @@
         state: present
       become: true
 
-  when:
-    - kea_dhcp_version is version('1.7', '>=')
-    - kea_dhcp_version is version('1.8', '<')
-
 - name: redhat | Installing Kea DHCP Packages
-  package:
+  ansible.builtin.package:
     name: "{{ kea_dhcp_packages }}"
     state: present
   become: true

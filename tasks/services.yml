@@ -1,16 +1,16 @@
 ---
 - name: services | Enabling Kea DHCP Services
-  service:
+  ansible.builtin.service:
     name: "{{ item['name'] }}"
     enabled: "{{ item['enabled'] }}"
   become: true
   loop: "{{ kea_dhcp_services }}"
 
 - name: services | Ensuring Kea DHCP Services Are Started
-  service:
+  ansible.builtin.service:
     name: "{{ item['name'] }}"
     state: started
   become: true
   loop: "{{ kea_dhcp_services }}"
   when:
-    - item['enabled']|bool
+    - item['enabled'] | bool

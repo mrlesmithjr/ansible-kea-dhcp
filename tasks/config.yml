@@ -1,13 +1,13 @@
 ---
 - name: config | Configuring Kea DHCP
-  template:
+  ansible.builtin.template:
     src: "{{ item + '.j2' }}"
     dest: "{{ '/' + item }}"
     owner: root
     group: root
-    mode: o=rw,g=r,o=r
+    mode: "0644"
   notify:
-    - restart kea-dhcp
+    - Restart kea-dhcp
   become: true
   loop:
     - etc/kea/kea-dhcp-ddns.conf

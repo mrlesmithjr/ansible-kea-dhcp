@@ -1,6 +1,6 @@
 ---
 - name: debian | Installing Pre-Reqs
-  apt:
+  ansible.builtin.apt:
     name: "{{ kea_dhcp_pre_reqs }}"
     state: present
   become: true
@@ -8,19 +8,19 @@
   until: result is successful
 
 - name: debian | Adding Kea DHCP Repo Key
-  apt_key:
+  ansible.builtin.apt_key:
     url: "{{ kea_dhcp_repo_key }}"
     state: present
   become: true
 
 - name: debian | Adding Kea DHCP Repo
-  apt_repository:
+  ansible.builtin.apt_repository:
     repo: "{{ kea_dhcp_repo }}"
     state: present
   become: true
 
 - name: debian | Installing Kea DHCP Packages
-  apt:
+  ansible.builtin.apt:
     name: "{{ kea_dhcp_packages }}"
     state: present
   become: true

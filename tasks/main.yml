@@ -1,17 +1,23 @@
 ---
 # tasks file for ansible-kea-dhcp
-- include_tasks: set_facts.yml
+- name: Set facts
+  ansible.builtin.include_tasks: set_facts.yml
 
-- include_tasks: debian.yml
+- name: Include Debian tasks
+  ansible.builtin.include_tasks: debian.yml
   when: ansible_os_family == "Debian"
 
-- include_tasks: redhat.yml
+- name: Include RedHat tasks
+  ansible.builtin.include_tasks: redhat.yml
   when: ansible_os_family == "RedHat"
 
-- include_tasks: suse.yml
+- name: Include SUSE tasks
+  ansible.builtin.include_tasks: suse.yml
   when: ansible_os_family == "Suse"
 
-- include_tasks: services.yml
+- name: Include services tasks
+  ansible.builtin.include_tasks: services.yml
 
-- include_tasks: config.yml
-  when: kea_dhcp_config|bool
+- name: Include config tasks
+  ansible.builtin.include_tasks: config.yml
+  when: kea_dhcp_config | bool

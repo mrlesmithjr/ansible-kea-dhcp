@@ -1,5 +1,6 @@
 ---
-- hosts: dhcp_servers
+- name: Configure Kea DHCP servers
+  hosts: dhcp_servers
   gather_facts: true
   vars:
     kea_dhcp_config: true
@@ -74,8 +75,8 @@
     pri_domain_name: test.vagrant.local
   tasks:
     - name: Include ansible-bootstrap-python
-      include_role:
+      ansible.builtin.include_role:
         name: ansible-bootstrap-python
     - name: Include ansible-kea-dhcp
-      include_role:
+      ansible.builtin.include_role:
         name: ansible-kea-dhcp
