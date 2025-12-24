@@ -1,0 +1,28 @@
+---
+name: Galaxy Publish
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Ansible
+        run: pip install ansible
+
+      - name: Publish to Galaxy
+        run: |
+          ansible-galaxy role import \
+            --api-key "${{ secrets.GALAXY_API_KEY }}" \
+            mrlesmithjr ansible-kea-dhcp
