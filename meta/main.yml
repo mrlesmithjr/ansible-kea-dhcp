@@ -23,7 +23,11 @@ galaxy_info:
         - noble
     - name: SLES
       versions:
+        - "15"
         - "16"
+    - name: openSUSE
+      versions:
+        - Tumbleweed
 
   galaxy_tags:
     - networking

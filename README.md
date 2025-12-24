@@ -17,6 +17,14 @@ Ansible role to install/configure Kea DHCP
 For any required Ansible roles, review:
 [requirements.yml](requirements.yml)
 
+## SUSE/openSUSE Support
+
+- **SLES 15/16**: Uses native SUSE repositories
+- **openSUSE Tumbleweed**: Uses native openSUSE repositories
+- **openSUSE Leap**: Not currently supported (Kea not in official repos)
+
+**Note**: The `kea_dhcp_version` variable is not yet supported for SUSE family distributions. The role installs whatever version is available in the native repositories.
+
 ## Role Variables
 
 [defaults/main.yml](defaults/main.yml)
