@@ -6,7 +6,7 @@
   become: true
   register: result
   until: result is successful
-  when: ansible_distribution != "Fedora"
+  when: ansible_facts["distribution"] != "Fedora"
 
 - name: redhat | Installing Pre-Reqs
   package:
@@ -28,7 +28,7 @@
       yum_repository:
         name: "isc-kea-{{ kea_dhcp_version|replace('.','-') }}"
         description: "isc-kea-{{ kea_dhcp_version|replace('.','-') }}"
-        baseurl: "{{ kea_dhcp_repos }}/kea-{{ kea_dhcp_version|replace('.','-') }}/rpm/el/{{ hostvars[inventory_hostname].ansible_distribution_major_version }}/$basearch"
+        baseurl: "{{ kea_dhcp_repos }}/kea-{{ kea_dhcp_version|replace('.','-') }}/rpm/el/{{ hostvars[inventory_hostname].ansible_facts['distribution_major_version'] }}/$basearch"
         gpgcheck: true
         enabled: true
         gpgkey: "{{ kea_dhcp_repo_key }}"
@@ -39,7 +39,7 @@
       yum_repository:
         name: "isc-kea-{{ kea_dhcp_version|replace('.','-') }}-noarch"
         description: "isc-kea-{{ kea_dhcp_version|replace('.','-') }}-noarch"
-        baseurl: "{{ kea_dhcp_repos }}/kea-{{ kea_dhcp_version|replace('.','-') }}/rpm/el/{{ hostvars[inventory_hostname].ansible_distribution_major_version }}/noarch"
+        baseurl: "{{ kea_dhcp_repos }}/kea-{{ kea_dhcp_version|replace('.','-') }}/rpm/el/{{ hostvars[inventory_hostname].ansible_facts['distribution_major_version'] }}/noarch"
         gpgcheck: true
         enabled: true
         gpgkey: "{{ kea_dhcp_repo_key }}"
@@ -50,7 +50,7 @@
       yum_repository:
         name: isc-kea-{{ kea_dhcp_version|replace('.','-') }}-source
         description: isc-kea-{{ kea_dhcp_version|replace('.','-') }}-source
-        baseurl: "{{ kea_dhcp_repos }}/kea-{{ kea_dhcp_version|replace('.','-') }}/rpm/el/{{ hostvars[inventory_hostname].ansible_distribution_major_version }}/SRPMS"
+        baseurl: "{{ kea_dhcp_repos }}/kea-{{ kea_dhcp_version|replace('.','-') }}/rpm/el/{{ hostvars[inventory_hostname].ansible_facts['distribution_major_version'] }}/SRPMS"
         gpgcheck: true
         enabled: true
         gpgkey: "{{ kea_dhcp_repo_key }}"
